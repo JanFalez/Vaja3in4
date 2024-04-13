@@ -18,6 +18,12 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
 
+            - name: Configure Docker daemon
+              run: |
+                sudo usermod -aG docker $USER
+                sudo systemctl restart docker
+              if: runner.os == 'Linux'
+
             - name: Current time
               id: date
               run: echo "date=$(date +'%Y-%m-%d--%M-%S')" >> "$GITHUB_ENV"
