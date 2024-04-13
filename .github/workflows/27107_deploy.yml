@@ -20,17 +20,10 @@ jobs:
  
             - name: Login to Docker Hub
               run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u $DOCKER_USERNAME --password-stdin
-            
-            - name: Current time
-              id: date
-              run: echo "date=$(date +'%Y-%m-%d--%M-%S')" >> "$GITHUB_ENV"
 
             - name: Build Docker image
-              run: |
-                echo ${{ steps.date.outputs.date }}
-                echo "docker build . --file Dockerfile --tag $DOCKER_USERNAME/$REPONAME:$date"
-                docker build . --file Dockerfile --tag $DOCKER_USERNAME/$REPONAME:$date
+              run: docker build -t $DOCKER_USERNAME/$REPONAME:latest
       
             - name: Push docker image
               run: |
-                docker push $DOCKER_USERNAME/$REPONAME:$date
+                docker push $DOCKER_USERNAME/$REPONAME:latest
