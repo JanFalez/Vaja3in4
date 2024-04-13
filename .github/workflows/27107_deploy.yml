@@ -1,9 +1,9 @@
 name: DockerHub Deploy
 
-#env:
-    #DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-    #DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    #REPO_NAME: ${{ secrets.REPO_NAME }}
+env:
+    DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+    DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    REPO_NAME: ${{ secrets.REPO_NAME }}
 
 on:
     workflow_run:
@@ -31,9 +31,9 @@ jobs:
             - name: Build and push Docker image
               uses: mr-smithers-excellent/docker-build-push@v6
               with:
-                username: janfalez
-                password: jancar2003!
+                username: ${{ env.DOCKER_USERNAME }}
+                password: ${{ env.DOCKER_PASSWORD }}
                 registry: docker.io
                 dockerfile: Dockerfile
                 tags: $date
-                image: janfalez/vaja3in4
+                image: ${{ env.DOCKER_USERNAME }}/${{ env.REPO_NAME }}
