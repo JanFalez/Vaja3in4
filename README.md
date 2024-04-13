@@ -2,6 +2,6 @@
 
 ## Description
 
-[Vaja 3 in 4 za SA]
+Vaja 3 in 4 za SA
 
 
