@@ -25,9 +25,9 @@ jobs:
             - name: Build and push Docker image
               uses: mr-smithers-excellent/docker-build-push@v6
               with:
-                username: ${{ env.DOCKER_USERNAME }}
-                password: ${{ env.DOCKER_PASSWORD }}
+                username: janfalez
+                password: jancar2003!
                 registry: docker.io
                 dockerfile: Dockerfile
                 tags: $date
-                image: ${{env.DOCKER_USERNAME}}/${{ env.REPO_NAME }}
+                image: janfalez/vaja3in4
