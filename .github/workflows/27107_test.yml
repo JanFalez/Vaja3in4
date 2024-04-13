@@ -1,75 +1,74 @@
-name: test
+name: test  # Name of the workflow
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]  # Trigger the workflow on pushes to the main branch
 
 jobs:
     check_tests:
-      runs-on: self-hosted
+      runs-on: self-hosted  # Run this job on a self-hosted runner
       strategy:
         matrix:
-          python-version: [3.8, 3.9]
+          python-version: [3.8, 3.9]  # Matrix strategy to run the job with Python 3.8 and 3.9
       steps:
         - name: Checkout code
-          uses: actions/checkout@v2
+          uses: actions/checkout@v2  # Checkout the code from the repository
           
         - name: Set up Python ${{ matrix.python-version }}
-          uses: actions/setup-python@v2
+          uses: actions/setup-python@v2  # Set up the Python environment
           with:
-            python-version: ${{ matrix.python-version }}
+            python-version: ${{ matrix.python-version }}  # Use the Python version specified in the matrix
         
         - name: Check if test script exists
           run: |
-            if [ ! -f "test.py" ]; then
-              echo "Test script not found" > napaka.txt
+            if [ ! -f "test.py" ]; then  # Check if test.py file exists
+              echo "Test script not found" > napaka.txt  # Write an error message to napaka.txt if test.py does not exist
               exit 1
             fi
-          continue-on-error: true
+          continue-on-error: true  # Continue the workflow even if this step fails
           # Saves the error output to a file
-          if: ${{ failure() }}
+          if: ${{ failure() }}  # Condition to execute this step only if the previous step failed
         
         - name: Upload artifact
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v2  # Upload napaka.txt as an artifact
           with:
             name: error-artifact
-            path: napaka.txt
-          if: ${{ failure() }}
+            path: napaka.txt  # Path to the artifact
+          if: ${{ failure() }}  # Condition to execute this step only if the previous step failed
   
     run_tests:
-      runs-on: self-hosted
-      needs: check_tests
+      runs-on: self-hosted  # Run this job on a self-hosted runner
+      needs: check_tests  # This job depends on the completion of the check_tests job
       strategy:
         matrix:
-          python-version: [3.8, 3.9]
+          python-version: [3.8, 3.9]  # Matrix strategy to run the job with Python 3.8 and 3.9
       steps:
         - name: Checkout code
-          uses: actions/checkout@v2
+          uses: actions/checkout@v2  # Checkout the code from the repository
           
         - name: Set up Python ${{ matrix.python-version }}
-          uses: actions/setup-python@v2
+          uses: actions/setup-python@v2  # Set up the Python environment
           with:
-            python-version: ${{ matrix.python-version }}
+            python-version: ${{ matrix.python-version }}  # Use the Python version specified in the matrix
   
         - name: Download artifact
-          uses: actions/download-artifact@v2
+          uses: actions/download-artifact@v2  # Download the artifact produced by the check_tests job
           with:
-            name: error-artifact
-            path: .
-          if: ${{ needs.check_tests.result == 'failure' }}
+            name: error-artifact  # Name of the artifact to download
+            path: .  # Path to download the artifact to
+          if: ${{ needs.check_tests.result == 'failure' }}  # Condition to execute this step only if the check_tests job failed
   
         - name: Install dependencies
-          run: pip install -r requirements.txt
+          run: pip install -r requirements.txt  # Install dependencies specified in requirements.txt
   
         - name: Run tests
-          run: python test.py
-          continue-on-error: true
+          run: python test.py  # Run the tests
+          continue-on-error: true  # Continue the workflow even if this step fails
         
         - name: Check for error
           run: |
-            if [ -f "napaka.txt" ]; then
-              cat napaka.txt
+            if [ -f "napaka.txt" ]; then  # Check if napaka.txt exists
+              cat napaka.txt  # Output the contents of napaka.txt
               exit 1
             fi
-          if: ${{ failure() }}
-  
+          if: ${{ failure() }}  # Condition to execute this step only if the previous step failed
