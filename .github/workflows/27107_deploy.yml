@@ -19,18 +19,18 @@ jobs:
               uses: actions/checkout@v2
  
             - name: Login to Docker Hub
-              run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u $DOCKER_USERNAME --password-stdin
+              run: sudo echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u $DOCKER_USERNAME --password-stdin
             
             - name: Current time
               id: date
-              run: echo "date=$(date +'%Y-%m-%d--%M-%S')" >> "$GITHUB_ENV"
+              run: sudo echo "date=$(date +'%Y-%m-%d--%M-%S')" >> "$GITHUB_ENV"
 
             - name: Build Docker image
               run: |
-                echo ${{ steps.date.outputs.date }}
-                echo "docker build . --file Dockerfile --tag $DOCKER_USERNAME/$REPONAME:$date"
-                docker build . --file Dockerfile --tag $DOCKER_USERNAME/$REPONAME:$date
+                sudo echo ${{ steps.date.outputs.date }}
+                sudo echo "docker build . --file Dockerfile --tag $DOCKER_USERNAME/$REPONAME:$date"
+                sudo docker build . --file Dockerfile --tag $DOCKER_USERNAME/$REPONAME:$date
       
             - name: Push docker image
               run: |
-                docker push $DOCKER_USERNAME/$REPONAME:$date
+                sudo docker push $DOCKER_USERNAME/$REPONAME:$date
