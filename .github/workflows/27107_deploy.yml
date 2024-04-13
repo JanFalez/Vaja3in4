@@ -1,6 +1,6 @@
 name: DockerHub Deploy
 
-env:
+#env:
     #DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
     #DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     #REPO_NAME: ${{ secrets.REPO_NAME }}
