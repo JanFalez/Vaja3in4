@@ -18,10 +18,9 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
  
-            - name: Login in Docker
-              run: |
-                docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-
+            - name: Login to Docker Hub
+              run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u $DOCKER_USERNAME --password-stdin
+            
             - name: Current time
               id: date
               run: echo "date=$(date +'%Y-%m-%d--%M-%S')" >> "$GITHUB_ENV"
