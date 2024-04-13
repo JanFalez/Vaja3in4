@@ -3,7 +3,7 @@ name: DockerHub Deploy
 env:
     DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
     DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    REPO_NAME: ${{ secrets.REPO_NAME }}
+    REPONAME: ${{ secrets.REPO_NAME }}
 
 on:
     workflow_run:
@@ -18,16 +18,20 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
  
+            - name: Login in Docker
+              run: |
+                docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
             - name: Current time
               id: date
               run: echo "date=$(date +'%Y-%m-%d--%M-%S')" >> "$GITHUB_ENV"
 
-            - name: Build and push Docker image
-              uses: mr-smithers-excellent/docker-build-push@v6
-              with:
-                username: ${{ env.DOCKER_USERNAME }}
-                password: ${{ env.DOCKER_PASSWORD }}
-                registry: docker.io
-                dockerfile: Dockerfile
-                tags: $date
-                image: ${{ env.DOCKER_USERNAME }}/${{ env.REPO_NAME }}
+            - name: Build Docker image
+              run: |
+                echo ${{ steps.date.outputs.date }}
+                echo "docker build . --file Dockerfile --tag $DOCKER_USERNAME/$REPONAME:$date"
+                docker build . --file Dockerfile --tag $DOCKER_USERNAME/$REPONAME:$date
+      
+            - name: Push docker image
+              run: |
+                docker push $DOCKER_USERNAME/$REPONAME:$date
