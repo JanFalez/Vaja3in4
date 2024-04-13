@@ -7,7 +7,7 @@ env:
 
 on:
     workflow_run:
-        workflows: ["27107_test.yml"]
+        workflows: ["CI"]
         types:
             - completed
 
